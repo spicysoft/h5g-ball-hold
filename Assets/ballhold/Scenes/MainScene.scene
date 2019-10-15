@@ -14,10 +14,10 @@
             "b": 12277864419541674404
         }, {
             "$type": "Unity.Tiny.Core2D.Camera2D, Unity.Tiny.Core2D",
-            "halfVerticalSize": 5,
+            "halfVerticalSize": 480,
             "rect": {
-                "width": 1,
-                "height": 1
+                "width": 540,
+                "height": 960
             },
             "backgroundColor": {
                 "r": 0.1921569,
@@ -58,6 +58,25 @@
                 "c": "r"
             }, {
                 "c": "a"
+            }]
+        }, {
+            "$type": "Unity.Authoring.Core.ComponentOrder, Unity.Authoring.Core",
+            "Elements": [{
+                "StableTypeHash": 7960064150805274675
+            }, {
+                "StableTypeHash": 793987765392955020
+            }, {
+                "StableTypeHash": 12662904853204722592
+            }, {
+                "StableTypeHash": 742575471234645341
+            }, {
+                "StableTypeHash": 266869500686333426
+            }, {
+                "StableTypeHash": 9104342357061045742
+            }, {
+                "StableTypeHash": 17378348762221180850
+            }, {
+                "StableTypeHash": 874803706151837934
             }]
         }]
     }]
