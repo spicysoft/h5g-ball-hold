@@ -20,39 +20,71 @@ namespace BallHold
 
 			bool mouseOn = inputSystem.GetMouseButtonDown( 0 );
 			bool mouseUp = inputSystem.GetMouseButtonUp( 0 );
+			bool isHit = false;
+			float dt = World.TinyEnvironment().frameDeltaTime;
+			
 
-			Entities.ForEach( ( Entity entity, ref BallInfo ball, ref Translation trans ) => {
-				// 仮.
-				if( !ball.Initialized ) {
-					ball.Initialized = true;
-					ball.IsTouched = false;
-					ball.Status = StNorm;
+			Entities.ForEach( ( Entity entity, ref BallInfo ball, ref Translation trans, ref NonUniformScale scl ) => {
+				if( !ball.IsActive || !ball.Initialized )
 					return;
-				}
 
 				switch( ball.Status ) {
 				case StNorm:
+					if( isHit )
+						break;
+
 					if( !ball.IsTouched && mouseOn ) {
 						float3 mypos = trans.Value;
 						float3 mousePos = inputSystem.GetWorldInputPosition();
 
 						if( OverlapsObjectCollider( mypos, mousePos, 40f ) ) {
-							Debug.LogAlways( "hit" );
+							// ヒットチェック1個だけにするため.
+							isHit = true;
+
 							ball.IsTouched = true;
-							ball.mouseStPos = mousePos;
-							ball.mouseStTime = World.TinyEnvironment().frameTime;
+							ball.MouseStPos = mousePos;
+							ball.MouseStTime = World.TinyEnvironment().frameTime;
 						}
 					}
 					if( ball.IsTouched && mouseUp ) {
 						double time = World.TinyEnvironment().frameTime;
 						float3 mpos = inputSystem.GetWorldInputPosition();
-						float len = math.distance( ball.mouseStPos.xy, mpos.xy );
-						float dt = (float)(time - ball.mouseStTime);
 
-						float spd = len / dt;
-						Debug.LogFormatAlways( "spd {0} t {1} d {2}", spd, dt, len );
+						float3 dv = mpos - ball.MouseStPos;
+						//float len = math.distance( ball.MouseStPos.xy, mpos.xy );
+						float len = math.length( dv );
+						float delta = (float)(time - ball.MouseStTime);
 
-						ball.IsTouched = false;
+						if( len > 50f ) {
+							float spd = len / delta * 0.6f;
+							Debug.LogFormatAlways( "spd {0} t {1} d {2}", spd, delta, len );
+
+							ball.MoveSpd = spd;
+							ball.MoveVec = dv / len;
+							ball.IsTouched = false;
+							ball.Status = StMove;
+							ball.Vy = ball.MoveVec.y * spd;
+						}
+						else {
+							ball.IsTouched = false;
+						}
+					}
+					break;
+
+				case StMove:
+					float3 pos = trans.Value;
+					pos.x += ball.MoveVec.x * ball.MoveSpd * dt;
+					pos.y += ball.Vy * dt;
+
+					ball.Vy -= 1200f * dt;
+
+					trans.Value = pos;
+
+					ball.Timer += dt;
+					if( ball.Timer > 3f ) {
+						ball.Status = StEnd;
+						ball.IsActive = false;
+						scl.Value.x = 0;
 					}
 					break;
 				}

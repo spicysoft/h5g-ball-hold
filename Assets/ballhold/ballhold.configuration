@@ -5,6 +5,17 @@
     "AssetReferences": [],
     "Entities": [{
         "Components": [{
+            "$type": "BallHold.GameConfig, ballhold",
+            "TitleScn": {
+                "SceneGuid": "00000000000000000000000000000000"
+            },
+            "MainScn": {
+                "SceneGuid": "00000000000000000000000000000000"
+            },
+            "BallScn": {
+                "SceneGuid": "de12eb1ae38241f089ee556177bcdf66"
+            }
+        }, {
             "$type": "Unity.Entities.EntityGuid, Unity.Entities",
             "a": 5775173179406306295,
             "b": 12241072502635337621
@@ -21,6 +32,10 @@
                 "SceneReference": {
                     "SceneGuid": "bc9362d1b1784964ac181b46e56ee60d"
                 }
+            }, {
+                "SceneReference": {
+                    "SceneGuid": "de12eb1ae38241f089ee556177bcdf66"
+                }
             }]
         }, {
             "$type": "Unity.Tiny.Scenes.StartupScenes, Unity.Tiny.Scenes",
@@ -35,6 +50,8 @@
                 "StableTypeHash": 7960064150805274675
             }, {
                 "StableTypeHash": 12662904853204722592
+            }, {
+                "StableTypeHash": 9976737623565294555
             }]
         }, {
             "$type": "Unity.Authoring.Core.ConfigurationTag, Unity.Authoring.Core"
