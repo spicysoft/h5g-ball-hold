@@ -14,6 +14,7 @@ namespace BallHold
 		public float3 MoveVec;
 		public float MoveSpd;
 		public float Timer;
+		public float Vx;
 		public float Vy;
 	}
 }

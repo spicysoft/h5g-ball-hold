@@ -4,6 +4,7 @@ using Unity.Tiny.Core;
 using Unity.Tiny.Core2D;
 using Unity.Tiny.Debugging;
 using Unity.Tiny.Input;
+using Unity.Tiny.Text;
 
 namespace BallHold
 {
@@ -11,8 +12,9 @@ namespace BallHold
 	{
 		public const int StNorm = 0;
 		public const int StMove = 1;
+		public const int StIn = 2;
 		public const int StEnd = 10;
-
+		public const float BallRadius = 20f;
 
 		protected override void OnUpdate()
 		{
@@ -22,7 +24,18 @@ namespace BallHold
 			bool mouseUp = inputSystem.GetMouseButtonUp( 0 );
 			bool isHit = false;
 			float dt = World.TinyEnvironment().frameDeltaTime;
-			
+
+			// 籠情報.
+			float3 boxPos = float3.zero;
+			float2 boxSize = float2.zero;
+			Entities.ForEach( ( Entity entity, ref BoxInfo box, ref Translation trans, ref Sprite2DRendererOptions opt ) => {
+				boxPos = trans.Value;
+				boxSize = new float2( box.Width + BallRadius, box.Height + BallRadius );
+			} );
+			// 半径分足したサイズ.
+			float2 boxSizeR = new float2( boxSize.x + BallRadius, boxSize.y + BallRadius );
+
+			float DebSpeed = 0;
 
 			Entities.ForEach( ( Entity entity, ref BallInfo ball, ref Translation trans, ref NonUniformScale scl ) => {
 				if( !ball.IsActive || !ball.Initialized )
@@ -37,8 +50,8 @@ namespace BallHold
 						float3 mypos = trans.Value;
 						float3 mousePos = inputSystem.GetWorldInputPosition();
 
-						if( OverlapsObjectCollider( mypos, mousePos, 40f ) ) {
-							// ヒットチェック1個だけにするため.
+						if( isInsideCircle( mousePos, mypos, BallRadius*1.5f ) ) {
+							// ヒットチェック1個だけにするため終了に.
 							isHit = true;
 
 							ball.IsTouched = true;
@@ -55,14 +68,19 @@ namespace BallHold
 						float len = math.length( dv );
 						float delta = (float)(time - ball.MouseStTime);
 
-						if( len > 50f ) {
+						if( len > 10f ) {
 							float spd = len / delta * 0.6f;
-							Debug.LogFormatAlways( "spd {0} t {1} d {2}", spd, delta, len );
+							//Debug.LogFormatAlways( "spd {0} t {1} d {2}", spd, delta, len );
+
+							spd = math.clamp( spd, 500f, 1500f );
+
+							DebSpeed = spd;
 
 							ball.MoveSpd = spd;
 							ball.MoveVec = dv / len;
 							ball.IsTouched = false;
 							ball.Status = StMove;
+							ball.Vx = ball.MoveVec.x * spd;
 							ball.Vy = ball.MoveVec.y * spd;
 						}
 						else {
@@ -73,12 +91,29 @@ namespace BallHold
 
 				case StMove:
 					float3 pos = trans.Value;
-					pos.x += ball.MoveVec.x * ball.MoveSpd * dt;
+					pos.x += ball.Vx * dt;
 					pos.y += ball.Vy * dt;
 
-					ball.Vy -= 1200f * dt;
+					ball.Vy -= 1000f * dt;
 
-					trans.Value = pos;
+					float3 intersectPos = pos;
+					if( isInsideBox( pos, boxPos, boxSizeR ) ) {
+						//Debug.LogAlways("Box hit");
+						int hitType = IntersectCheck( trans.Value, pos, boxPos, boxSizeR, out intersectPos );
+						if( hitType == 1 || hitType == 2 ) {
+							ball.Vx *= -0.5f;
+						}
+						else if( hitType == 3 ) {
+							ball.Vy *= -0.5f;
+						}
+						else if( hitType == 4 ) {
+							// 入った.
+							ball.Status = StIn;
+							ball.Timer = 0;
+						}
+					}
+				
+					trans.Value = intersectPos;
 
 					ball.Timer += dt;
 					if( ball.Timer > 3f ) {
@@ -87,20 +122,126 @@ namespace BallHold
 						scl.Value.x = 0;
 					}
 					break;
+				case StIn:
+					ball.Timer += dt;
+					if( ball.Timer > 0.5f ) {
+						ball.Status = StEnd;
+						ball.IsActive = false;
+						scl.Value.x = 0;
+					}
+					break;
 				}
 			} );
 
+
+			if( DebSpeed > 0 ) {
+				Entities.WithAll<DebTextTab>().ForEach( ( Entity entity ) => {
+					string str = DebSpeed.ToString();
+					EntityManager.SetBufferFromString<TextString>( entity, str );
+				} );
+			}
 		}
 
 
-
-		bool OverlapsObjectCollider( float3 position, float3 inputPosition, float radius )
+		bool isInsideCircle( float3 inputPosition, float3 position, float radius )
 		{
 			float distsq = math.distancesq( position.xy, inputPosition.xy );
 			return distsq <= (radius * radius);
+		}
 
-			//var rect = new Rect( position.x - size.x * 0.5f, position.y - size.y * 0.5f, size.x, size.y );
-			//return rect.Contains( inputPosition.xy );
+		bool isInsideBox( float3 inputPosition, float3 position, float2 size )
+		{
+			var rect = new Rect( position.x - size.x * 0.5f, position.y - size.y * 0.5f, size.x, size.y );
+			return rect.Contains( inputPosition.xy );
+		}
+
+		int IntersectCheck( float3 prePos, float3 newPos, float3 pos, float2 size, out float3 outPos )
+		{
+			float boxLeft = pos.x - size.x * 0.5f;
+			float boxRight = pos.x + size.x * 0.5f;
+			float boxTop = pos.y + size.y * 0.5f;
+			float boxBottom = pos.y - size.y * 0.5f;
+			float3 posA = new float3( boxLeft, boxTop, 0 );		// 左上.
+			float3 posB = new float3( boxLeft, boxBottom, 0 );	// 左下.
+			float3 posC = new float3( boxRight, boxBottom, 0 );	// 右下.
+			float3 posD = new float3( boxRight, boxTop, 0 );    // 右上.
+			float3 intersectPos = float3.zero;
+
+			float dx = newPos.x - prePos.x;
+			float dy = newPos.y - prePos.y;
+
+			int isHit = 0;
+			if( dx > 0 ) {
+				if( prePos.x < boxLeft && newPos.x >= boxLeft ) {
+					// 左辺交差チェック.
+					if( isIntersectLine( prePos, newPos, posA, posB, out intersectPos ) ) {
+						Debug.LogAlways("left hit");
+						isHit = 1;
+					}
+				}
+			}
+			else if( dx < 0 ) {
+				if( prePos.x > boxRight && newPos.x <= boxRight ) {
+					// 右辺交差チェック.
+					if( isIntersectLine( prePos, newPos, posD, posC, out intersectPos ) ) {
+						Debug.LogAlways( "right hit" );
+						isHit = 2;
+					}
+				}
+			}
+
+			if( dy > 0 ) {
+				if( prePos.y < boxBottom && newPos.y >= boxBottom ) {
+					// 底辺交差チェック.
+					if( isIntersectLine( prePos, newPos, posB, posC, out intersectPos ) ) {
+						Debug.LogAlways( "bottom hit" );
+						isHit = 3;
+
+					}
+				}
+			}
+			else if( dy < 0 ) {
+				if( prePos.y > boxTop && newPos.y <= boxTop ) {
+					// 上辺交差チェック.
+					if( isIntersectLine( prePos, newPos, posA, posD, out intersectPos ) ) {
+						Debug.LogAlways( "top hit" );
+						isHit = 4;
+
+					}
+				}
+			}
+
+			outPos = intersectPos;
+			return isHit;
+		}
+
+
+		// 参考: https://qiita.com/Nunocky/items/55db409d90ebe0aac280
+		bool isIntersectLine( float3 st1, float3 ed1, float3 st2, float3 ed2, out float3 p )
+		{
+			p = st1;
+
+			float2 v1 = new float2( st1.x - st2.x, st1.y - st2.y );
+			float2 vA = new float2( ed1.x - st1.x, ed1.y - st1.y );
+			float2 vB = new float2( ed2.x - st2.x, ed2.y - st2.y );
+
+			// 外積.
+			float cross = vA.x * vB.y - vA.y * vB.x;
+
+			// 外積=0(平行)なら交差しない.
+			if( math.abs( cross ) < 0.00001f ) {
+				return false;
+			}
+
+			float t = (v1.y * vB.x - v1.x * vB.y) / cross;
+			float s = (v1.y * vA.x - v1.x * vA.y) / cross;
+
+			if( t < 0 || t > 1f || s < 0 || s > 1f ) {
+				return false;
+			}
+
+			p = new float3( vA.x * t + st1.x, vA.y * t + st1.y, 0 );
+			return true;
 		}
 	}
 }
