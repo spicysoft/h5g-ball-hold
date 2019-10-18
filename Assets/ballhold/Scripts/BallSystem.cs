@@ -10,11 +10,14 @@ namespace BallHold
 {
 	public class BallSystem : ComponentSystem
 	{
+		public const float BallRadius = 20f;
+		private const float Gacc = 1000f;
+		private const float WallX = 270f - BallRadius;
+
 		public const int StNorm = 0;
 		public const int StMove = 1;
 		public const int StIn = 2;
 		public const int StEnd = 10;
-		public const float BallRadius = 20f;
 
 		protected override void OnUpdate()
 		{
@@ -30,16 +33,26 @@ namespace BallHold
 			float2 boxSize = float2.zero;
 			Entities.ForEach( ( Entity entity, ref BoxInfo box, ref Translation trans, ref Sprite2DRendererOptions opt ) => {
 				boxPos = trans.Value;
-				boxSize = new float2( box.Width + BallRadius, box.Height + BallRadius );
+				//boxSize = new float2( box.Width + BallRadius, box.Height + BallRadius );
+				boxSize = new float2( box.Width, box.Height );
 			} );
-			// 半径分足したサイズ.
-			float2 boxSizeR = new float2( boxSize.x + BallRadius, boxSize.y + BallRadius );
+			// 半径2個分足したサイズ.
+			float2 boxSizeR = new float2( boxSize.x + BallRadius * 2f, boxSize.y + BallRadius * 2f );
 
 			float DebSpeed = 0;
+
+			// 箱の内側の情報.
+			float boxInsideLeft = boxPos.x - boxSize.x * 0.5f + BallRadius;
+			float boxInsideRight = boxPos.x + boxSize.x * 0.5f - BallRadius;
+			float boxInsideBottom = boxPos.y - boxSize.y * 0.5f + BallRadius;
+
+			//Debug.LogFormatAlways("y {0} sy {1} r {2} btm {3}", boxPos.y, boxSize.y, BallRadius, boxInsideBottom);
 
 			Entities.ForEach( ( Entity entity, ref BallInfo ball, ref Translation trans, ref NonUniformScale scl ) => {
 				if( !ball.IsActive || !ball.Initialized )
 					return;
+
+				float3 pos = float3.zero;
 
 				switch( ball.Status ) {
 				case StNorm:
@@ -50,7 +63,7 @@ namespace BallHold
 						float3 mypos = trans.Value;
 						float3 mousePos = inputSystem.GetWorldInputPosition();
 
-						if( isInsideCircle( mousePos, mypos, BallRadius*1.5f ) ) {
+						if( isInsideCircle( mousePos, mypos, BallRadius * 1.5f ) ) {
 							// ヒットチェック1個だけにするため終了に.
 							isHit = true;
 
@@ -61,18 +74,24 @@ namespace BallHold
 					}
 					if( ball.IsTouched && mouseUp ) {
 						double time = World.TinyEnvironment().frameTime;
+						float delta = (float)(time - ball.MouseStTime);
+						if( delta > 1f ) {
+							ball.IsTouched = false;
+							break;
+						}
+
 						float3 mpos = inputSystem.GetWorldInputPosition();
+						//Debug.LogFormatAlways( "mx {0} my {1}", mpos.x, mpos.y );
 
 						float3 dv = mpos - ball.MouseStPos;
 						//float len = math.distance( ball.MouseStPos.xy, mpos.xy );
 						float len = math.length( dv );
-						float delta = (float)(time - ball.MouseStTime);
 
 						if( len > 10f ) {
 							float spd = len / delta * 0.6f;
 							//Debug.LogFormatAlways( "spd {0} t {1} d {2}", spd, delta, len );
 
-							spd = math.clamp( spd, 500f, 1500f );
+							spd = math.clamp( spd, 700f, 1500f );
 
 							DebSpeed = spd;
 
@@ -82,6 +101,7 @@ namespace BallHold
 							ball.Status = StMove;
 							ball.Vx = ball.MoveVec.x * spd;
 							ball.Vy = ball.MoveVec.y * spd;
+							//Debug.LogFormatAlways( "vx {0} vy {1} d {2}", ball.Vx, ball.Vy, len );
 						}
 						else {
 							ball.IsTouched = false;
@@ -90,30 +110,41 @@ namespace BallHold
 					break;
 
 				case StMove:
-					float3 pos = trans.Value;
+					pos = trans.Value;
 					pos.x += ball.Vx * dt;
 					pos.y += ball.Vy * dt;
+					ball.Vy -= Gacc * dt;
 
-					ball.Vy -= 1000f * dt;
-
-					float3 intersectPos = pos;
-					if( isInsideBox( pos, boxPos, boxSizeR ) ) {
-						//Debug.LogAlways("Box hit");
-						int hitType = IntersectCheck( trans.Value, pos, boxPos, boxSizeR, out intersectPos );
-						if( hitType == 1 || hitType == 2 ) {
-							ball.Vx *= -0.5f;
-						}
-						else if( hitType == 3 ) {
-							ball.Vy *= -0.5f;
-						}
-						else if( hitType == 4 ) {
-							// 入った.
-							ball.Status = StIn;
-							ball.Timer = 0;
-						}
+					// 壁とチェック.
+					if( pos.x < -WallX ) {
+						pos.x = -WallX;
+						ball.Vx *= -1f;
+						trans.Value = pos;
 					}
-				
-					trans.Value = intersectPos;
+					else if( pos.x > WallX ) {
+						pos.x = WallX;
+						ball.Vx *= -1f;
+						trans.Value = pos;
+					}
+					else {
+						// 籠とチェック.
+						float3 intersectPos = pos;
+						if( isInsideBox( pos, boxPos, boxSizeR ) ) {
+							int hitType = IntersectCheck( trans.Value, pos, boxPos, boxSizeR, out intersectPos );
+							if( hitType == 1 || hitType == 2 ) {
+								ball.Vx *= -0.5f;
+							}
+							else if( hitType == 3 ) {
+								ball.Vy *= -0.5f;
+							}
+							else if( hitType == 4 ) {
+								// 入った.
+								ball.Status = StIn;
+								ball.Timer = 0;
+							}
+						}
+						trans.Value = intersectPos;
+					}
 
 					ball.Timer += dt;
 					if( ball.Timer > 3f ) {
@@ -122,7 +153,28 @@ namespace BallHold
 						scl.Value.x = 0;
 					}
 					break;
+
 				case StIn:
+					pos = trans.Value;
+					pos.x += ball.Vx * dt;
+					pos.y += ball.Vy * dt;
+					ball.Vy -= Gacc * dt;
+
+					if( pos.x < boxInsideLeft ) {
+						pos.x = boxInsideLeft;
+						ball.Vx *= -1;
+					}
+					else if( pos.x > boxInsideRight ) {
+						pos.x = boxInsideRight;
+						ball.Vx *= -1;
+					}
+
+					if( pos.y < boxInsideBottom ) {
+						pos.y = boxInsideBottom;
+					}
+
+					trans.Value = pos;
+
 					ball.Timer += dt;
 					if( ball.Timer > 0.5f ) {
 						ball.Status = StEnd;
@@ -136,7 +188,12 @@ namespace BallHold
 
 			if( DebSpeed > 0 ) {
 				Entities.WithAll<DebTextTab>().ForEach( ( Entity entity ) => {
-					string str = DebSpeed.ToString();
+					// float.ToString()がwebビルドで使えない.
+					int i = (int)DebSpeed;
+					float f = DebSpeed - (int)i;
+					int fi = (int)(f * 1000f);
+					string str = i.ToString() + "." + fi.ToString();
+					Debug.LogAlways( str );
 					EntityManager.SetBufferFromString<TextString>( entity, str );
 				} );
 			}
@@ -161,9 +218,10 @@ namespace BallHold
 			float boxRight = pos.x + size.x * 0.5f;
 			float boxTop = pos.y + size.y * 0.5f;
 			float boxBottom = pos.y - size.y * 0.5f;
-			float3 posA = new float3( boxLeft, boxTop, 0 );		// 左上.
-			float3 posB = new float3( boxLeft, boxBottom, 0 );	// 左下.
-			float3 posC = new float3( boxRight, boxBottom, 0 );	// 右下.
+
+			float3 posA = new float3( boxLeft, boxTop, 0 );     // 左上.
+			float3 posB = new float3( boxLeft, boxBottom, 0 );  // 左下.
+			float3 posC = new float3( boxRight, boxBottom, 0 ); // 右下.
 			float3 posD = new float3( boxRight, boxTop, 0 );    // 右上.
 			float3 intersectPos = float3.zero;
 
@@ -175,7 +233,7 @@ namespace BallHold
 				if( prePos.x < boxLeft && newPos.x >= boxLeft ) {
 					// 左辺交差チェック.
 					if( isIntersectLine( prePos, newPos, posA, posB, out intersectPos ) ) {
-						Debug.LogAlways("left hit");
+						//Debug.LogAlways("left hit");
 						isHit = 1;
 					}
 				}
@@ -184,7 +242,7 @@ namespace BallHold
 				if( prePos.x > boxRight && newPos.x <= boxRight ) {
 					// 右辺交差チェック.
 					if( isIntersectLine( prePos, newPos, posD, posC, out intersectPos ) ) {
-						Debug.LogAlways( "right hit" );
+						//Debug.LogAlways( "right hit" );
 						isHit = 2;
 					}
 				}
@@ -194,7 +252,7 @@ namespace BallHold
 				if( prePos.y < boxBottom && newPos.y >= boxBottom ) {
 					// 底辺交差チェック.
 					if( isIntersectLine( prePos, newPos, posB, posC, out intersectPos ) ) {
-						Debug.LogAlways( "bottom hit" );
+						//Debug.LogAlways( "bottom hit" );
 						isHit = 3;
 
 					}
@@ -204,7 +262,7 @@ namespace BallHold
 				if( prePos.y > boxTop && newPos.y <= boxTop ) {
 					// 上辺交差チェック.
 					if( isIntersectLine( prePos, newPos, posA, posD, out intersectPos ) ) {
-						Debug.LogAlways( "top hit" );
+						//Debug.LogAlways( "top hit" );
 						isHit = 4;
 
 					}

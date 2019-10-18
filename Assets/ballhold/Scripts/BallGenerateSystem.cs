@@ -19,7 +19,7 @@ namespace BallHold
 
 				float dt = World.TinyEnvironment().frameDeltaTime;
 				gen.Timer += dt;
-				if( gen.Timer > 2f ) {
+				if( gen.Timer > 1.5f ) {
 					reqGen = true;
 					gen.Timer = 0;
 				}

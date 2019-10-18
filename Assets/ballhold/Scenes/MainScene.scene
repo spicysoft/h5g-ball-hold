@@ -34,8 +34,8 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "x": -168,
-                "y": -255
+                "x": -152,
+                "y": -260
             }
         }, {
             "$type": "Unity.Tiny.Core2D.Rotation, Unity.Tiny.Core2D",
@@ -528,7 +528,7 @@
                 "r": 0.06674972,
                 "g": 0.9433962,
                 "b": 0.9338273,
-                "a": 1
+                "a": 0.5960785
             },
             "blending": 0
         }, {
@@ -543,8 +543,7 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "x": 61,
-                "y": -17
+                "y": -144
             }
         }, {
             "$type": "Unity.Tiny.Core2D.Rotation, Unity.Tiny.Core2D",
@@ -661,7 +660,7 @@
             "b": 12277864419541674404
         }, {
             "$type": "Unity.Tiny.Core2D.Camera2D, Unity.Tiny.Core2D",
-            "halfVerticalSize": 480,
+            "halfVerticalSize": 500,
             "rect": {
                 "width": 540,
                 "height": 960

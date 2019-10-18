@@ -31,11 +31,13 @@ namespace BallHold
 				ball.IsTouched = false;
 				ball.Status = BallSystem.StNorm;
 				ball.Timer = 0;
+				ball.Vx = 0;
+				ball.Vy = 0;
 				scl.Value.x = 1f;
 
-				float randx = _random.NextFloat( -250f, 250f );
+				float randx = _random.NextFloat( -220f, 220f );
 				trans.Value.x = randx;
-				trans.Value.y = -255f;
+				trans.Value.y = -260f;
 			} );
 
 		}
