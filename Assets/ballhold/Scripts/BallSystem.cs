@@ -13,6 +13,7 @@ namespace BallHold
 		public const float BallRadius = 20f;
 		private const float Gacc = 1000f;
 		private const float WallX = 270f - BallRadius;
+		private const float TopY = 480f - BallRadius;
 
 		public const int StNorm = 0;
 		public const int StMove = 1;
@@ -115,36 +116,45 @@ namespace BallHold
 					pos.y += ball.Vy * dt;
 					ball.Vy -= Gacc * dt;
 
-					// 壁とチェック.
+					// 壁とのあたり.
 					if( pos.x < -WallX ) {
 						pos.x = -WallX;
-						ball.Vx *= -1f;
+						ball.Vx *= -0.5f;
 						trans.Value = pos;
 					}
 					else if( pos.x > WallX ) {
 						pos.x = WallX;
-						ball.Vx *= -1f;
+						ball.Vx *= -0.5f;
 						trans.Value = pos;
 					}
-					else {
-						// 籠とチェック.
-						float3 intersectPos = pos;
-						if( isInsideBox( pos, boxPos, boxSizeR ) ) {
-							int hitType = IntersectCheck( trans.Value, pos, boxPos, boxSizeR, out intersectPos );
-							if( hitType == 1 || hitType == 2 ) {
-								ball.Vx *= -0.5f;
-							}
-							else if( hitType == 3 ) {
-								ball.Vy *= -0.5f;
-							}
-							else if( hitType == 4 ) {
-								// 入った.
-								ball.Status = StIn;
-								ball.Timer = 0;
-							}
-						}
-						trans.Value = intersectPos;
+
+					// 天井とのあたり.
+					if( pos.y > TopY ) {
+						pos.y = TopY;
+						ball.Vy *= -0.5f;
+						trans.Value = pos;
 					}
+
+					// 籠とのあたり.
+					float3 intersectPos = pos;
+					if( isInsideBox( pos, boxPos, boxSizeR ) ) {
+						int hitType = IntersectCheck( trans.Value, pos, boxPos, boxSizeR, out intersectPos );
+						if( hitType == 1 || hitType == 2 ) {
+							// 左右.
+							ball.Vx *= -0.5f;
+						}
+						else if( hitType == 3 ) {
+							// 底.
+							ball.Vy *= -0.5f;
+						}
+						else if( hitType == 4 ) {
+							// 入った.
+							ball.Status = StIn;
+							ball.Timer = 0;
+						}
+					}
+					trans.Value = intersectPos;
+
 
 					ball.Timer += dt;
 					if( ball.Timer > 3f ) {
@@ -162,11 +172,11 @@ namespace BallHold
 
 					if( pos.x < boxInsideLeft ) {
 						pos.x = boxInsideLeft;
-						ball.Vx *= -1;
+						ball.Vx *= -0.5f;
 					}
 					else if( pos.x > boxInsideRight ) {
 						pos.x = boxInsideRight;
-						ball.Vx *= -1;
+						ball.Vx *= -0.5f;
 					}
 
 					if( pos.y < boxInsideBottom ) {
@@ -212,6 +222,12 @@ namespace BallHold
 			return rect.Contains( inputPosition.xy );
 		}
 
+		// return
+		// 0 : 外れ.
+		// 1 : 左ヒット.
+		// 2 : 右ヒット.
+		// 3 : 底ヒット.
+		// 4 : 上ヒット. 
 		int IntersectCheck( float3 prePos, float3 newPos, float3 pos, float2 size, out float3 outPos )
 		{
 			float boxLeft = pos.x - size.x * 0.5f;

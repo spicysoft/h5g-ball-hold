@@ -535,7 +535,8 @@
             "$type": "Unity.Authoring.Core.SiblingIndex, Unity.Authoring.Core",
             "Index": 6
         }, {
-            "$type": "BallHold.BoxInfo, ballhold"
+            "$type": "BallHold.BoxInfo, ballhold",
+            "TarDir": {}
         }, {
             "$type": "Unity.Entities.EntityGuid, Unity.Entities",
             "a": 16214242160447996173,
@@ -543,7 +544,8 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "y": -144
+                "x": 82,
+                "y": 249
             }
         }, {
             "$type": "Unity.Tiny.Core2D.Rotation, Unity.Tiny.Core2D",
@@ -602,6 +604,12 @@
                 "StableTypeHash": 147127668789581756
             }, {
                 "StableTypeHash": 12123901043637200472
+            }, {
+                "StableTypeHash": 7280148739800882417
+            }, {
+                "StableTypeHash": 13109020247198235445
+            }, {
+                "StableTypeHash": 18323672362971129080
             }]
         }]
     }, {

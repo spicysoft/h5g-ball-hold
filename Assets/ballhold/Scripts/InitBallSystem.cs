@@ -16,7 +16,6 @@ namespace BallHold
 				if( !info.Initialized ) {
 					info.Initialized = true;
 					int seed = World.TinyEnvironment().frameNum;
-					Debug.LogFormatAlways( "seed {0}", seed );
 					_random.InitState( (uint)seed );
 				}
 			} );
@@ -35,7 +34,7 @@ namespace BallHold
 				ball.Vy = 0;
 				scl.Value.x = 1f;
 
-				float randx = _random.NextFloat( -220f, 220f );
+				float randx = _random.NextFloat( -230f, 230f );
 				trans.Value.x = randx;
 				trans.Value.y = -260f;
 			} );
