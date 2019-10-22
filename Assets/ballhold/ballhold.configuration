@@ -10,10 +10,13 @@
                 "SceneGuid": "00000000000000000000000000000000"
             },
             "MainScn": {
-                "SceneGuid": "00000000000000000000000000000000"
+                "SceneGuid": "bc9362d1b1784964ac181b46e56ee60d"
             },
             "BallScn": {
                 "SceneGuid": "de12eb1ae38241f089ee556177bcdf66"
+            },
+            "ScoreScn": {
+                "SceneGuid": "63636415877a462ead8127d9fe8545e0"
             }
         }, {
             "$type": "Unity.Entities.EntityGuid, Unity.Entities",
@@ -36,6 +39,10 @@
                 "SceneReference": {
                     "SceneGuid": "de12eb1ae38241f089ee556177bcdf66"
                 }
+            }, {
+                "SceneReference": {
+                    "SceneGuid": "63636415877a462ead8127d9fe8545e0"
+                }
             }]
         }, {
             "$type": "Unity.Tiny.Scenes.StartupScenes, Unity.Tiny.Scenes",
@@ -52,6 +59,8 @@
                 "StableTypeHash": 12662904853204722592
             }, {
                 "StableTypeHash": 9976737623565294555
+            }, {
+                "StableTypeHash": 2483095550690088635
             }]
         }, {
             "$type": "Unity.Authoring.Core.ConfigurationTag, Unity.Authoring.Core"

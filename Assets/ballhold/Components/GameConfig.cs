@@ -8,5 +8,6 @@ namespace BallHold
 		public SceneReference TitleScn;
 		public SceneReference MainScn;
 		public SceneReference BallScn;
+		public SceneReference ScoreScn;
 	}
 }

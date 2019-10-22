@@ -4,6 +4,7 @@ using Unity.Tiny.Core;
 using Unity.Tiny.Core2D;
 using Unity.Tiny.Debugging;
 using Unity.Tiny.Input;
+using Unity.Tiny.Scenes;
 using Unity.Tiny.Text;
 
 namespace BallHold
@@ -12,6 +13,7 @@ namespace BallHold
 	{
 		public const float BallRadius = 20f;
 		private const float Gacc = 1000f;
+		//private const float Gacc = 0f;
 		private const float WallX = 270f - BallRadius;
 		private const float TopY = 480f - BallRadius;
 
@@ -28,6 +30,9 @@ namespace BallHold
 			bool mouseUp = inputSystem.GetMouseButtonUp( 0 );
 			bool isHit = false;
 			float dt = World.TinyEnvironment().frameDeltaTime;
+			int score = 0;
+			int reqEffScore = 0;
+
 
 			// 籠情報.
 			float3 boxPos = float3.zero;
@@ -151,6 +156,8 @@ namespace BallHold
 							// 入った.
 							ball.Status = StIn;
 							ball.Timer = 0;
+							// エフェクト.
+							reqEffScore++;
 						}
 					}
 					trans.Value = intersectPos;
@@ -187,6 +194,9 @@ namespace BallHold
 
 					ball.Timer += dt;
 					if( ball.Timer > 0.5f ) {
+						// score.
+						score += 100;
+
 						ball.Status = StEnd;
 						ball.IsActive = false;
 						scl.Value.x = 0;
@@ -194,6 +204,37 @@ namespace BallHold
 					break;
 				}
 			} );
+
+			// スコア更新.
+			if( score > 0 ) {
+				Entities.ForEach( ( ref GameMngr mngr ) => {
+					mngr.IsUpdatedScore = true;
+					mngr.Score += score;
+				} );
+			}
+
+			// エフェクト.
+			for( int i = 0; i < reqEffScore; ++i ) {
+				bool recycled = false;
+
+				Entities.ForEach( ( Entity entity, ref EffScoreInfo eff ) => {
+					if( !recycled ) {
+						if( !eff.IsActive ) {
+							eff.IsActive = true;
+							eff.Initialized = false;
+							recycled = true;
+						}
+					}
+				} );
+
+				//Debug.LogFormatAlways( "bulcnt {0} recycled {1}", bulCnt, recycled );
+
+				if( !recycled ) {
+					var env = World.TinyEnvironment();
+					SceneService.LoadSceneAsync( env.GetConfigData<GameConfig>().ScoreScn );
+				}
+			}
+
 
 
 			if( DebSpeed > 0 ) {

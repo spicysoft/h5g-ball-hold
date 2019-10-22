@@ -12,6 +12,7 @@ namespace BallHold
 		private const int StInit = 0;
 		private const int StMove = 1;
 		private const int StWait = 2;
+		private const int StWarp = 3;
 
 
 		protected override void OnUpdate()
@@ -45,15 +46,18 @@ namespace BallHold
 				case StInit:
 					box.Timer += dt;
 					if( box.Timer > 1f ) {
+						box.Status = StWarp;
+#if false
 						box.Status = StMove;
 						box.Timer = 0;
 						box.TarDir = new float3( 0, 1f, 0 );
 						box.TarDist = 250f;
+#endif
 					}
 					break;
 
 				case StMove:
-					float spd = 40f * dt;
+					float spd = 30f * dt;
 					float3 vel = box.TarDir * spd;
 					float3 nxtPos = nowPos + vel;
 					box.Dist += spd;
@@ -73,14 +77,26 @@ namespace BallHold
 						box.Dist = 0;
 
 						nextTarget( ref box, ref trans );
-						//box.TarDir = new float3( -1f, 1f, 0 );
-						//box.TarDist = 250f;
+					}
+					break;
+
+				case StWarp:
+					box.Timer += dt;
+					if( box.Timer > 5f ) {
+						box.Timer = 0;
+						box.Dist = 0;
+						nextWarpPoint( ref box, ref trans );
 					}
 					break;
 				}
 			} );
 		}
 
+		void nextWarpPoint( ref BoxInfo box, ref Translation trans )
+		{
+			nextTarget( ref box, ref trans );
+			trans.Value += box.TarDir * box.TarDist;
+		}
 
 		void nextTarget( ref BoxInfo box, ref Translation trans )
 		{
