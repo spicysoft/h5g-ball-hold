@@ -27,7 +27,8 @@ namespace BallHold
 					box.WaitTime = 0;
 					box.TarDist = 0;
 					box.Dist = 0;
-					trans.Value = new float3( 210f, 10f, 0 );
+					//trans.Value = new float3( 210f, 10f, 0 );
+					trans.Value = new float3( 0f, -10f, 0 );
 
 					//int seed = World.TinyEnvironment().frameNum;
 					//_random.InitState( (uint)seed );
@@ -45,7 +46,7 @@ namespace BallHold
 				switch( box.Status ) {
 				case StInit:
 					box.Timer += dt;
-					if( box.Timer > 1f ) {
+					if( box.Timer > 100f ) {
 						box.Status = StWarp;
 #if false
 						box.Status = StMove;

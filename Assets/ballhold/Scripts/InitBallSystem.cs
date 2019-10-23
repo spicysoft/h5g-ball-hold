@@ -33,6 +33,7 @@ namespace BallHold
 				ball.Vx = 0;
 				ball.Vy = 0;
 				scl.Value.x = 1f;
+				ball.UseOldPos = false;
 
 				float randx = _random.NextFloat( -230f, 230f );
 				trans.Value.x = randx;

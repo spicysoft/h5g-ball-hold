@@ -16,5 +16,7 @@ namespace BallHold
 		public float Timer;
 		public float Vx;
 		public float Vy;
+		public float3 OldPos;
+		public bool UseOldPos;
 	}
 }

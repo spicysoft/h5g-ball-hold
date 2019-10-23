@@ -26,7 +26,8 @@
             "$type": "BallHold.BallInfo, ballhold",
             "IsActive": true,
             "MouseStPos": {},
-            "MoveVec": {}
+            "MoveVec": {},
+            "OldPos": {}
         }, {
             "$type": "Unity.Entities.EntityGuid, Unity.Entities",
             "a": 164009343639175601,
@@ -34,7 +35,7 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "x": -230,
+                "x": 45,
                 "y": -260
             }
         }, {
@@ -114,6 +115,10 @@
                 "StableTypeHash": 6586208186281564844
             }, {
                 "StableTypeHash": 3209591214687910877
+            }, {
+                "StableTypeHash": 1619273888239394918
+            }, {
+                "StableTypeHash": 1486624152069370283
             }]
         }]
     }, {
@@ -944,7 +949,7 @@
             "b": 12277864419541674404
         }, {
             "$type": "Unity.Tiny.Core2D.Camera2D, Unity.Tiny.Core2D",
-            "halfVerticalSize": 500,
+            "halfVerticalSize": 480,
             "rect": {
                 "width": 540,
                 "height": 960

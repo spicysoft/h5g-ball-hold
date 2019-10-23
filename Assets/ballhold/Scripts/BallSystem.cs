@@ -12,10 +12,11 @@ namespace BallHold
 	public class BallSystem : ComponentSystem
 	{
 		public const float BallRadius = 20f;
-		private const float Gacc = 1000f;
-		//private const float Gacc = 0f;
+		//private const float Gacc = 1000f;
+		private const float Gacc = 0f;
 		private const float WallX = 270f - BallRadius;
-		private const float TopY = 480f - BallRadius;
+		//private const float TopY = 480f - BallRadius;
+		private const float TopY = 280f - BallRadius;
 
 		public const int StNorm = 0;
 		public const int StMove = 1;
@@ -121,16 +122,19 @@ namespace BallHold
 					pos.y += ball.Vy * dt;
 					ball.Vy -= Gacc * dt;
 
+					bool bWallHit = false;
 					// 壁とのあたり.
 					if( pos.x < -WallX ) {
 						pos.x = -WallX;
 						ball.Vx *= -0.5f;
 						trans.Value = pos;
+						bWallHit = true;
 					}
 					else if( pos.x > WallX ) {
 						pos.x = WallX;
 						ball.Vx *= -0.5f;
 						trans.Value = pos;
+						bWallHit = true;
 					}
 
 					// 天井とのあたり.
@@ -138,30 +142,44 @@ namespace BallHold
 						pos.y = TopY;
 						ball.Vy *= -0.5f;
 						trans.Value = pos;
+						bWallHit = true;
 					}
 
 					// 籠とのあたり.
-					float3 intersectPos = pos;
-					if( isInsideBox( pos, boxPos, boxSizeR ) ) {
-						int hitType = IntersectCheck( trans.Value, pos, boxPos, boxSizeR, out intersectPos );
-						if( hitType == 1 || hitType == 2 ) {
-							// 左右.
-							ball.Vx *= -0.5f;
+					if( !bWallHit ) {
+						float3 intersectPos = pos;
+						if( isInsideBox( pos, boxPos, boxSizeR, boxSize, trans.Value, ref ball ) ) {
+							float3 prePos = trans.Value;
+							/*if( ball.UseOldPos ) {
+								ball.UseOldPos = false;
+								prePos = ball.OldPos;
+								Debug.LogFormatAlways("oldpos {0}", prePos);
+							}*/
+							
+							int hitType = IntersectCheck( prePos, pos, boxPos, boxSizeR, out intersectPos );
+							if( hitType == 1 || hitType == 2 ) {
+								// 左右.
+								ball.Vx *= -0.5f;
+							}
+							else if( hitType == 3 ) {
+								// 底.
+								ball.Vy *= -0.5f;
+							}
+							else if( hitType == 4 ) {
+								// 入った.
+								ball.Status = StIn;
+								ball.Timer = 0;
+								// エフェクト.
+								//reqEffScore++;
+							}
+							else {
+								// todo 消す?
+								Debug.LogFormatAlways("pre {0} pos{1}", prePos, pos);
+								reqEffScore++;
+							}
 						}
-						else if( hitType == 3 ) {
-							// 底.
-							ball.Vy *= -0.5f;
-						}
-						else if( hitType == 4 ) {
-							// 入った.
-							ball.Status = StIn;
-							ball.Timer = 0;
-							// エフェクト.
-							reqEffScore++;
-						}
+						trans.Value = intersectPos;
 					}
-					trans.Value = intersectPos;
-
 
 					ball.Timer += dt;
 					if( ball.Timer > 3f ) {
@@ -203,6 +221,9 @@ namespace BallHold
 					}
 					break;
 				}
+
+				ball.OldPos = trans.Value;
+
 			} );
 
 			// スコア更新.
@@ -244,7 +265,7 @@ namespace BallHold
 					float f = DebSpeed - (int)i;
 					int fi = (int)(f * 1000f);
 					string str = i.ToString() + "." + fi.ToString();
-					Debug.LogAlways( str );
+					//Debug.LogAlways( str );
 					EntityManager.SetBufferFromString<TextString>( entity, str );
 				} );
 			}
@@ -257,10 +278,76 @@ namespace BallHold
 			return distsq <= (radius * radius);
 		}
 
-		bool isInsideBox( float3 inputPosition, float3 position, float2 size )
+		bool isInsideRect( float3 inputPosition, float3 center, float2 size )
 		{
-			var rect = new Rect( position.x - size.x * 0.5f, position.y - size.y * 0.5f, size.x, size.y );
+			var rect = new Rect( center.x - size.x * 0.5f, center.y - size.y * 0.5f, size.x, size.y );
 			return rect.Contains( inputPosition.xy );
+		}
+
+		bool isInsideBox( float3 inputPosition, float3 center, float2 sizeR, float2 size, float3 oldPos, ref BallInfo ball )
+		{
+			var rect = new Rect( center.x - sizeR.x * 0.5f, center.y - sizeR.y * 0.5f, sizeR.x, sizeR.y );
+			if( rect.Contains( inputPosition.xy ) ) {
+#if false
+				// 四隅とチェック.
+				float distSq = 0;
+				// A
+				var rectA = new Rect( center.x - sizeR.x*0.5f, center.y + size.y*0.5f, BallRadius, BallRadius );
+				if( rectA.Contains( inputPosition.xy ) ) {
+					float3 posA = new float3( center.x - size.x * 0.5f, center.y + size.y * 0.5f, 0 );
+					distSq = math.distancesq( inputPosition, posA );
+					if( distSq > BallRadius * BallRadius ) {
+						ball.UseOldPos = true;
+						ball.OldPos = oldPos;
+						return false;
+					}
+					else
+						return true;
+				}
+				// B
+				var rectB = new Rect( center.x - sizeR.x * 0.5f, center.y - sizeR.y * 0.5f, BallRadius, BallRadius );
+				if( rectB.Contains( inputPosition.xy ) ) {
+					float3 posB = new float3( center.x - size.x * 0.5f, center.y - size.y * 0.5f, 0 );
+					distSq = math.distancesq( inputPosition, posB );
+					if( distSq > BallRadius * BallRadius ) {
+						Debug.LogAlways("near corner ");
+						ball.UseOldPos = true;
+						ball.OldPos = 0.5f*(oldPos + inputPosition);
+						return false;
+					}
+					else
+						return true;
+				}
+				// C
+				var rectC = new Rect( center.x + size.x * 0.5f, center.y - sizeR.y * 0.5f, BallRadius, BallRadius );
+				if( rectC.Contains( inputPosition.xy ) ) {
+					float3 posC = new float3( center.x + size.x * 0.5f, center.y - size.y * 0.5f, 0 );
+					distSq = math.distancesq( inputPosition, posC );
+					if( distSq > BallRadius * BallRadius ) {
+						ball.UseOldPos = true;
+						ball.OldPos = oldPos;
+						return false;
+					}
+					else
+						return true;
+				}
+				// D
+				var rectD = new Rect( center.x + size.x * 0.5f, center.y + size.y * 0.5f, BallRadius, BallRadius );
+				if( rectD.Contains( inputPosition.xy ) ) {
+					float3 posD = new float3( center.x + size.x * 0.5f, center.y + size.y * 0.5f, 0 );
+					distSq = math.distancesq( inputPosition, posD );
+					if( distSq > BallRadius * BallRadius ) {
+						ball.UseOldPos = true;
+						ball.OldPos = oldPos;
+						return false;
+					}
+					else
+						return true;
+				}
+#endif
+				return true;
+			}
+			return false;
 		}
 
 		// return
@@ -269,12 +356,12 @@ namespace BallHold
 		// 2 : 右ヒット.
 		// 3 : 底ヒット.
 		// 4 : 上ヒット. 
-		int IntersectCheck( float3 prePos, float3 newPos, float3 pos, float2 size, out float3 outPos )
+		int IntersectCheck( float3 prePos, float3 newPos, float3 pos, float2 sizeR, out float3 outPos )
 		{
-			float boxLeft = pos.x - size.x * 0.5f;
-			float boxRight = pos.x + size.x * 0.5f;
-			float boxTop = pos.y + size.y * 0.5f;
-			float boxBottom = pos.y - size.y * 0.5f;
+			float boxLeft = pos.x - sizeR.x * 0.5f;
+			float boxRight = pos.x + sizeR.x * 0.5f;
+			float boxTop = pos.y + sizeR.y * 0.5f;
+			float boxBottom = pos.y - sizeR.y * 0.5f;
 
 			float3 posA = new float3( boxLeft, boxTop, 0 );     // 左上.
 			float3 posB = new float3( boxLeft, boxBottom, 0 );  // 左下.
