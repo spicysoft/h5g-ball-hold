@@ -15,8 +15,8 @@ namespace BallHold
 		//private const float Gacc = 1000f;
 		private const float Gacc = 0f;
 		private const float WallX = 270f - BallRadius;
-		//private const float TopY = 480f - BallRadius;
-		private const float TopY = 280f - BallRadius;
+		private const float TopY = 480f - 100 - BallRadius;
+		//private const float TopY = 280f - BallRadius;
 
 		public const int StNorm = 0;
 		public const int StMove = 1;
@@ -30,10 +30,19 @@ namespace BallHold
 			bool mouseOn = inputSystem.GetMouseButtonDown( 0 );
 			bool mouseUp = inputSystem.GetMouseButtonUp( 0 );
 			bool isHit = false;
+			bool isPause = false;
+
+			Entities.ForEach( ( ref GameMngr mngr ) => {
+				isPause = mngr.IsPause;
+			} );
+
+			if( isPause )
+				return;
+
 			float dt = World.TinyEnvironment().frameDeltaTime;
 			int score = 0;
 			int reqEffScore = 0;
-
+			int ballCnt = 0;
 
 			// 籠情報.
 			float3 boxPos = float3.zero;
@@ -58,6 +67,8 @@ namespace BallHold
 			Entities.ForEach( ( Entity entity, ref BallInfo ball, ref Translation trans, ref NonUniformScale scl ) => {
 				if( !ball.IsActive || !ball.Initialized )
 					return;
+
+				ballCnt++;
 
 				float3 pos = float3.zero;
 
@@ -256,19 +267,25 @@ namespace BallHold
 				}
 			}
 
+			// 現在の玉の数.
+			Entities.ForEach( ( Entity entity, ref BallGenerateInfo gen ) => {
+				gen.BallNum = ballCnt;
+			} );
 
-
-			if( DebSpeed > 0 ) {
+			//if( DebSpeed > 0 ) {
 				Entities.WithAll<DebTextTab>().ForEach( ( Entity entity ) => {
+#if false
 					// float.ToString()がwebビルドで使えない.
 					int i = (int)DebSpeed;
 					float f = DebSpeed - (int)i;
 					int fi = (int)(f * 1000f);
 					string str = i.ToString() + "." + fi.ToString();
 					//Debug.LogAlways( str );
+#endif
+					string str = ballCnt.ToString();
 					EntityManager.SetBufferFromString<TextString>( entity, str );
 				} );
-			}
+			//}
 		}
 
 

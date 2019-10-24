@@ -6,7 +6,9 @@ namespace BallHold
 	{
 		public bool Initialized;
 		public bool IsUpdatedScore;
+		public bool IsPause;
 		public int Score;           // スコア.
-		public int HiScore;			// ハイスコア.
+		public int HiScore;         // ハイスコア.
+		public float Timer;
 	}
 }

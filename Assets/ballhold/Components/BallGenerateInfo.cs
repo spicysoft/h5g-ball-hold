@@ -7,5 +7,6 @@ namespace BallHold
 	{
 		public bool Initialized;
 		public float Timer;
+		public int BallNum;
 	}
 }

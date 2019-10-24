@@ -7,10 +7,13 @@
         "Components": [{
             "$type": "BallHold.GameConfig, ballhold",
             "TitleScn": {
-                "SceneGuid": "00000000000000000000000000000000"
+                "SceneGuid": "d636d313d469445a8bfb556fe24142b8"
             },
             "MainScn": {
                 "SceneGuid": "bc9362d1b1784964ac181b46e56ee60d"
+            },
+            "ResultScn": {
+                "SceneGuid": "200ed24af81c4083b62b487ba3dc6534"
             },
             "BallScn": {
                 "SceneGuid": "de12eb1ae38241f089ee556177bcdf66"
@@ -43,12 +46,20 @@
                 "SceneReference": {
                     "SceneGuid": "63636415877a462ead8127d9fe8545e0"
                 }
+            }, {
+                "SceneReference": {
+                    "SceneGuid": "d636d313d469445a8bfb556fe24142b8"
+                }
+            }, {
+                "SceneReference": {
+                    "SceneGuid": "200ed24af81c4083b62b487ba3dc6534"
+                }
             }]
         }, {
             "$type": "Unity.Tiny.Scenes.StartupScenes, Unity.Tiny.Scenes",
             "Elements": [{
                 "SceneReference": {
-                    "SceneGuid": "bc9362d1b1784964ac181b46e56ee60d"
+                    "SceneGuid": "d636d313d469445a8bfb556fe24142b8"
                 }
             }]
         }, {
@@ -61,6 +72,8 @@
                 "StableTypeHash": 9976737623565294555
             }, {
                 "StableTypeHash": 2483095550690088635
+            }, {
+                "StableTypeHash": 4971829417984540386
             }]
         }, {
             "$type": "Unity.Authoring.Core.ConfigurationTag, Unity.Authoring.Core"
