@@ -32,6 +32,10 @@ namespace BallHold
 					gen.Initialized = false;
 				} );
 
+				Entities.ForEach( ( Entity entity, ref BoxInfo box ) => {
+					box.Initialized = false;
+				} );
+
 #if false
 				// 初期化.
 				Entities.ForEach( ( ref BallInfo ball ) => {

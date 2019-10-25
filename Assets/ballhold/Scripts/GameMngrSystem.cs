@@ -67,8 +67,10 @@ namespace BallHold
 
 			if( isTimeOver ) {	
 				// リザルト表示.
-				SceneReference resultScn = World.TinyEnvironment().GetConfigData<GameConfig>().ResultScn;
-				SceneService.LoadSceneAsync( resultScn );
+				//SceneReference resultScn = World.TinyEnvironment().GetConfigData<GameConfig>().ResultScn;
+				//SceneService.LoadSceneAsync( resultScn );
+				SceneReference timeOverScn = World.TinyEnvironment().GetConfigData<GameConfig>().TimeOverScn;
+				SceneService.LoadSceneAsync( timeOverScn );
 			}
 
 		}

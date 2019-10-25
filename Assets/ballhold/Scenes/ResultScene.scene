@@ -373,7 +373,7 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "x": -88,
+                "x": -83,
                 "y": 95
             }
         }, {
@@ -561,7 +561,11 @@
                 "StableTypeHash": 15392216118221209652
             }, {
                 "StableTypeHash": 1511947279668656474
+            }, {
+                "StableTypeHash": 10194229255619704173
             }]
+        }, {
+            "$type": "BallHold.TextResultScoreTag, ballhold"
         }]
     }, {
         "Components": [{
@@ -571,7 +575,7 @@
             "$type": "Unity.Tiny.Core2D.Sprite2DRenderer, Unity.Tiny.Sprite2D",
             "sprite": "a26b31f8f7a51f30ee0e019f3cb54865",
             "color": {
-                "a": 0.3215686
+                "a": 0.627451
             },
             "blending": 0
         }, {
@@ -640,6 +644,47 @@
                 "StableTypeHash": 874803706151837934
             }, {
                 "StableTypeHash": 11301794271907081408
+            }]
+        }]
+    }, {
+        "Components": [{
+            "$type": "Unity.Tiny.Core2D.Parent, Unity.Tiny.Core2D"
+        }, {
+            "$type": "Unity.Authoring.Core.SiblingIndex, Unity.Authoring.Core",
+            "Index": 1
+        }, {
+            "$type": "BallHold.ResultComponent, ballhold"
+        }, {
+            "$type": "Unity.Entities.EntityGuid, Unity.Entities",
+            "a": 12686744901697687350,
+            "b": 13085400131185499221
+        }, {
+            "$type": "Unity.Tiny.Core.EntityName, Unity.Tiny.Core",
+            "Elements": [{
+                "c": "R"
+            }, {
+                "c": "e"
+            }, {
+                "c": "s"
+            }, {
+                "c": "u"
+            }, {
+                "c": "l"
+            }, {
+                "c": "t"
+            }]
+        }, {
+            "$type": "Unity.Authoring.Core.ComponentOrder, Unity.Authoring.Core",
+            "Elements": [{
+                "StableTypeHash": 7960064150805274675
+            }, {
+                "StableTypeHash": 793987765392955020
+            }, {
+                "StableTypeHash": 12662904853204722592
+            }, {
+                "StableTypeHash": 874803706151837934
+            }, {
+                "StableTypeHash": 1885690968894565540
             }]
         }]
     }, {
@@ -883,7 +928,7 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "x": -88,
+                "x": -83,
                 "y": 18
             }
         }, {
@@ -1086,7 +1131,11 @@
                 "StableTypeHash": 15392216118221209652
             }, {
                 "StableTypeHash": 1511947279668656474
+            }, {
+                "StableTypeHash": 4374475145985344328
             }]
+        }, {
+            "$type": "BallHold.TextResultHiScoreTag, ballhold"
         }]
     }, {
         "Components": [{

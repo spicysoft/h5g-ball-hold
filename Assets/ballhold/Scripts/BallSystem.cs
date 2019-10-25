@@ -12,8 +12,8 @@ namespace BallHold
 	public class BallSystem : ComponentSystem
 	{
 		public const float BallRadius = 20f;
-		//private const float Gacc = 1000f;
-		private const float Gacc = 0f;
+		private const float Gacc = 1000f;
+		//private const float Gacc = 0f;
 		private const float WallX = 270f - BallRadius;
 		private const float TopY = 480f - 100 - BallRadius;
 		//private const float TopY = 280f - BallRadius;
@@ -62,6 +62,8 @@ namespace BallHold
 			float boxInsideRight = boxPos.x + boxSize.x * 0.5f - BallRadius;
 			float boxInsideBottom = boxPos.y - boxSize.y * 0.5f + BallRadius;
 
+			float2 ballRect = new float2( BallRadius*2.4f, BallRadius*2.4f );
+
 			//Debug.LogFormatAlways("y {0} sy {1} r {2} btm {3}", boxPos.y, boxSize.y, BallRadius, boxInsideBottom);
 
 			Entities.ForEach( ( Entity entity, ref BallInfo ball, ref Translation trans, ref NonUniformScale scl ) => {
@@ -81,7 +83,8 @@ namespace BallHold
 						float3 mypos = trans.Value;
 						float3 mousePos = inputSystem.GetWorldInputPosition();
 
-						if( isInsideCircle( mousePos, mypos, BallRadius * 1.5f ) ) {
+						//if( isInsideCircle( mousePos, mypos, BallRadius * 1.5f ) ) {
+						if( isInsideRect( mousePos, mypos, ballRect ) ) {
 							// ヒットチェック1個だけにするため終了に.
 							isHit = true;
 
@@ -106,10 +109,10 @@ namespace BallHold
 						float len = math.length( dv );
 
 						if( len > 10f ) {
-							float spd = len / delta * 0.6f;
+							float spd = len / delta * 0.7f;
 							//Debug.LogFormatAlways( "spd {0} t {1} d {2}", spd, delta, len );
 
-							spd = math.clamp( spd, 700f, 1500f );
+							spd = math.clamp( spd, 750f, 1500f );
 
 							DebSpeed = spd;
 

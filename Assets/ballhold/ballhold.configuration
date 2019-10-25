@@ -20,6 +20,9 @@
             },
             "ScoreScn": {
                 "SceneGuid": "63636415877a462ead8127d9fe8545e0"
+            },
+            "TimeOverScn": {
+                "SceneGuid": "8bd377890c1a491a88af230cc7a359b4"
             }
         }, {
             "$type": "Unity.Entities.EntityGuid, Unity.Entities",
@@ -54,6 +57,10 @@
                 "SceneReference": {
                     "SceneGuid": "200ed24af81c4083b62b487ba3dc6534"
                 }
+            }, {
+                "SceneReference": {
+                    "SceneGuid": "8bd377890c1a491a88af230cc7a359b4"
+                }
             }]
         }, {
             "$type": "Unity.Tiny.Scenes.StartupScenes, Unity.Tiny.Scenes",
@@ -74,6 +81,8 @@
                 "StableTypeHash": 2483095550690088635
             }, {
                 "StableTypeHash": 4971829417984540386
+            }, {
+                "StableTypeHash": 14960235446808568600
             }]
         }, {
             "$type": "Unity.Authoring.Core.ConfigurationTag, Unity.Authoring.Core"

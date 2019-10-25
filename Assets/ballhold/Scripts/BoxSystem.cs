@@ -27,8 +27,8 @@ namespace BallHold
 					box.WaitTime = 0;
 					box.TarDist = 0;
 					box.Dist = 0;
-					//trans.Value = new float3( 210f, 10f, 0 );
-					trans.Value = new float3( 0f, -10f, 0 );
+					trans.Value = new float3( 210f, 10f, 0 );
+					//trans.Value = new float3( 0f, -10f, 0 );
 
 					//int seed = World.TinyEnvironment().frameNum;
 					//_random.InitState( (uint)seed );
