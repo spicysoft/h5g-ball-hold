@@ -11,12 +11,13 @@ namespace BallHold
 {
 	public class BallSystem : ComponentSystem
 	{
-		public const float BallRadius = 20f;
+		public const float BallRadius = 22;
 		private const float Gacc = 1000f;
 		//private const float Gacc = 0f;
 		private const float WallX = 270f - BallRadius;
 		private const float TopY = 480f - 100 - BallRadius;
 		//private const float TopY = 280f - BallRadius;
+		private const float BoundRate = 0.4f;
 
 		public const int StNorm = 0;
 		public const int StMove = 1;
@@ -62,7 +63,8 @@ namespace BallHold
 			float boxInsideRight = boxPos.x + boxSize.x * 0.5f - BallRadius;
 			float boxInsideBottom = boxPos.y - boxSize.y * 0.5f + BallRadius;
 
-			float2 ballRect = new float2( BallRadius*2.4f, BallRadius*2.4f );
+			// タッチ判定用.
+			float2 ballRect = new float2( BallRadius*2.6f, BallRadius*2.6f );
 
 			//Debug.LogFormatAlways("y {0} sy {1} r {2} btm {3}", boxPos.y, boxSize.y, BallRadius, boxInsideBottom);
 
@@ -140,13 +142,13 @@ namespace BallHold
 					// 壁とのあたり.
 					if( pos.x < -WallX ) {
 						pos.x = -WallX;
-						ball.Vx *= -0.5f;
+						ball.Vx *= -BoundRate;
 						trans.Value = pos;
 						bWallHit = true;
 					}
 					else if( pos.x > WallX ) {
 						pos.x = WallX;
-						ball.Vx *= -0.5f;
+						ball.Vx *= -BoundRate;
 						trans.Value = pos;
 						bWallHit = true;
 					}
@@ -154,7 +156,7 @@ namespace BallHold
 					// 天井とのあたり.
 					if( pos.y > TopY ) {
 						pos.y = TopY;
-						ball.Vy *= -0.5f;
+						ball.Vy *= -BoundRate;
 						trans.Value = pos;
 						bWallHit = true;
 					}
@@ -173,23 +175,22 @@ namespace BallHold
 							int hitType = IntersectCheck( prePos, pos, boxPos, boxSizeR, out intersectPos );
 							if( hitType == 1 || hitType == 2 ) {
 								// 左右.
-								ball.Vx *= -0.5f;
+								ball.Vx *= -BoundRate;
 							}
 							else if( hitType == 3 ) {
 								// 底.
-								ball.Vy *= -0.5f;
+								ball.Vy *= -BoundRate;
 							}
 							else if( hitType == 4 ) {
 								// 入った.
 								ball.Status = StIn;
 								ball.Timer = 0;
 								// エフェクト.
-								//reqEffScore++;
+								reqEffScore++;
 							}
 							else {
-								// todo 消す?
-								Debug.LogFormatAlways("pre {0} pos{1}", prePos, pos);
-								reqEffScore++;
+								// 籠ワープ後にちょうど籠に入ったら消す.
+								ball.Timer = 3f;
 							}
 						}
 						trans.Value = intersectPos;
@@ -211,11 +212,11 @@ namespace BallHold
 
 					if( pos.x < boxInsideLeft ) {
 						pos.x = boxInsideLeft;
-						ball.Vx *= -0.5f;
+						ball.Vx *= -BoundRate;
 					}
 					else if( pos.x > boxInsideRight ) {
 						pos.x = boxInsideRight;
-						ball.Vx *= -0.5f;
+						ball.Vx *= -BoundRate;
 					}
 
 					if( pos.y < boxInsideBottom ) {
@@ -225,7 +226,7 @@ namespace BallHold
 					trans.Value = pos;
 
 					ball.Timer += dt;
-					if( ball.Timer > 0.5f ) {
+					if( ball.Timer > 0.4f ) {
 						// score.
 						score += 100;
 

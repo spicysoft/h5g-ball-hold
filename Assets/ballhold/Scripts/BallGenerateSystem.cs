@@ -6,7 +6,7 @@ namespace BallHold
 {
 	public class BallGenerateSystem : ComponentSystem
 	{
-		private const int BallMax = 40;
+		private const int BallMax = 60;
 
 		protected override void OnUpdate()
 		{
@@ -29,9 +29,11 @@ namespace BallHold
 				}
 
 				float dt = World.TinyEnvironment().frameDeltaTime;
-				float interval = 1f;
-				if( gen.BallNum < 10 )
+				float interval = 0.5f;
+				if( gen.BallNum < 15 )
 					interval = 0.2f;
+				else if( gen.BallNum > 50 )
+					interval = 1f;
 
 				gen.Timer += dt;
 				if( gen.Timer > interval ) {

@@ -769,7 +769,7 @@
                 "y": 100
             },
             "anchoredPosition": {
-                "x": -65,
+                "x": -78,
                 "y": -54
             },
             "pivot": {
@@ -783,7 +783,7 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "x": -65,
+                "x": -78,
                 "y": 426
             }
         }, {
@@ -1116,7 +1116,7 @@
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
                 "x": 82,
-                "y": 133
+                "y": 190
             }
         }, {
             "$type": "Unity.Tiny.Core2D.Rotation, Unity.Tiny.Core2D",

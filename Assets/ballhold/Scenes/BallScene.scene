@@ -23,7 +23,8 @@
             "$type": "BallHold.BallInfo, ballhold",
             "IsActive": true,
             "MouseStPos": {},
-            "MoveVec": {}
+            "MoveVec": {},
+            "OldPos": {}
         }, {
             "$type": "Unity.Entities.EntityGuid, Unity.Entities",
             "a": 11527820761919998301,
@@ -54,8 +55,8 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Sprite2DRendererOptions, Unity.Tiny.Sprite2D",
             "size": {
-                "x": 40,
-                "y": 40
+                "x": 44,
+                "y": 44
             },
             "drawMode": 2
         }, {
@@ -107,6 +108,8 @@
                 "StableTypeHash": 13612870860624129487
             }, {
                 "StableTypeHash": 13601105068160246332
+            }, {
+                "StableTypeHash": 1486624152069370283
             }]
         }]
     }]

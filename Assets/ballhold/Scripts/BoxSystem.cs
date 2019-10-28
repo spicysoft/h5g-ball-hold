@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Tiny.Core;
 using Unity.Tiny.Core2D;
+using Unity.Tiny.Debugging;
 
 namespace BallHold
 {
@@ -30,9 +31,9 @@ namespace BallHold
 					trans.Value = new float3( 210f, 10f, 0 );
 					//trans.Value = new float3( 0f, -10f, 0 );
 
-					//int seed = World.TinyEnvironment().frameNum;
-					//_random.InitState( (uint)seed );
-					_random.InitState();
+					int seed = World.TinyEnvironment().frameNum;
+					_random.InitState( (uint)seed );
+					//_random.InitState();
 					return;
 				}
 				float dt = World.TinyEnvironment().frameDeltaTime;
@@ -46,7 +47,8 @@ namespace BallHold
 				switch( box.Status ) {
 				case StInit:
 					box.Timer += dt;
-					if( box.Timer > 100f ) {
+					if( box.Timer > 1f ) {
+						box.WaitTime = 10f;
 						box.Status = StWarp;
 #if false
 						box.Status = StMove;
@@ -83,10 +85,11 @@ namespace BallHold
 
 				case StWarp:
 					box.Timer += dt;
-					if( box.Timer > 5f ) {
+					if( box.Timer > box.WaitTime ) {
 						box.Timer = 0;
 						box.Dist = 0;
 						nextWarpPoint( ref box, ref trans );
+						box.WaitTime = _random.NextFloat( 5f, 10f );
 					}
 					break;
 				}
@@ -97,13 +100,14 @@ namespace BallHold
 		{
 			nextTarget( ref box, ref trans );
 			trans.Value += box.TarDir * box.TarDist;
+			Debug.LogFormatAlways( "pos {0}", trans.Value );
 		}
 
 		void nextTarget( ref BoxInfo box, ref Translation trans )
 		{
 			float MaxX = 210f;
 			float MinY = -100f;
-			float MaxY = 250f;
+			float MaxY = 180f;
 			float centerY = 0.5f * (MaxY - MinY);
 
 			float3 nowPos = trans.Value;
