@@ -6,6 +6,7 @@ namespace BallHold
 	public struct BoxInfo : IComponentData
 	{
 		public bool Initialized;
+		public bool RandomInitialized;
 		public float Width;
 		public float Height;
 		public int Status;

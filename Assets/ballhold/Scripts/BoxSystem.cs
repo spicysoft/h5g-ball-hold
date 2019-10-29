@@ -27,6 +27,12 @@ namespace BallHold
 				return;
 
 			Entities.ForEach( ( Entity entity, ref BoxInfo box, ref Translation trans, ref Sprite2DRendererOptions opt ) => {
+				if( !box.RandomInitialized ) {
+					box.RandomInitialized = true;
+					int seed = World.TinyEnvironment().frameNum;
+					_random.InitState( (uint)seed );
+					Debug.LogFormatAlways( "seed {0}", seed );
+				}
 				if( !box.Initialized ) {
 					box.Initialized = true;
 					box.Width = opt.size.x;
@@ -38,10 +44,6 @@ namespace BallHold
 					box.Dist = 0;
 					trans.Value = new float3( 210f, 10f, 0 );
 					//trans.Value = new float3( 0f, -10f, 0 );
-
-					int seed = World.TinyEnvironment().frameNum;
-					_random.InitState( (uint)seed );
-					//_random.InitState();
 					return;
 				}
 				float dt = World.TinyEnvironment().frameDeltaTime;

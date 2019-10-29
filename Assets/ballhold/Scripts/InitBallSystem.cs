@@ -2,7 +2,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Tiny.Core;
 using Unity.Tiny.Core2D;
-using Unity.Tiny.Debugging;
 
 namespace BallHold
 {
@@ -40,13 +39,6 @@ namespace BallHold
 
 				float randy = (float)_random.NextInt( -261, -220 );
 				trans.Value.y = randy;
-
-#if false
-				if( _random.NextBool() )
-					trans.Value.y = -260f;
-				else
-					trans.Value.y = -220f;
-#endif
 			} );
 
 		}

@@ -10,7 +10,7 @@ namespace BallHold
 {
 	public class GameMngrSystem : ComponentSystem
 	{
-		private const float GameTimeMax = 30f;
+		private const float GameTimeMax = 31f;
 		
 		protected override void OnUpdate()
 		{
