@@ -29,11 +29,13 @@ namespace BallHold
 				}
 
 				float dt = World.TinyEnvironment().frameDeltaTime;
-				float interval = 0.5f;
+				float interval = 0.4f;
 				if( gen.BallNum < 15 )
+					interval = 0.1f;
+				else if( gen.BallNum < 25 )
 					interval = 0.2f;
 				else if( gen.BallNum > 50 )
-					interval = 1f;
+					interval = 0.8f;
 
 				gen.Timer += dt;
 				if( gen.Timer > interval ) {

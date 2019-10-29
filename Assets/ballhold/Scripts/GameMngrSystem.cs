@@ -10,7 +10,7 @@ namespace BallHold
 {
 	public class GameMngrSystem : ComponentSystem
 	{
-		private const float GameTimeMax = 60f;
+		private const float GameTimeMax = 30f;
 		
 		protected override void OnUpdate()
 		{
@@ -66,9 +66,7 @@ namespace BallHold
 			} );
 
 			if( isTimeOver ) {	
-				// リザルト表示.
-				//SceneReference resultScn = World.TinyEnvironment().GetConfigData<GameConfig>().ResultScn;
-				//SceneService.LoadSceneAsync( resultScn );
+				// タイムオーバー表示.
 				SceneReference timeOverScn = World.TinyEnvironment().GetConfigData<GameConfig>().TimeOverScn;
 				SceneService.LoadSceneAsync( timeOverScn );
 			}

@@ -1039,9 +1039,13 @@
                 "StableTypeHash": 1511947279668656474
             }, {
                 "StableTypeHash": 18445413356672942274
+            }, {
+                "StableTypeHash": 8144720687316769559
             }]
         }, {
             "$type": "BallHold.DebTextTab, ballhold"
+        }, {
+            "$type": "Unity.Entities.Disabled, Unity.Entities"
         }]
     }, {
         "Components": [{
@@ -1097,8 +1101,9 @@
             "$type": "Unity.Tiny.Core2D.Sprite2DRenderer, Unity.Tiny.Sprite2D",
             "sprite": "c690586a82ad32c0d596cb570a8f5b45",
             "color": {
-                "r": 0.8490566,
-                "g": 0.3983236,
+                "r": 1,
+                "g": 0.4440872,
+                "b": 0.1462264,
                 "a": 1
             },
             "blending": 0

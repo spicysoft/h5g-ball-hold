@@ -18,6 +18,14 @@ namespace BallHold
 
 		protected override void OnUpdate()
 		{
+			bool isPause = false;
+
+			Entities.ForEach( ( ref GameMngr mngr ) => {
+				isPause = mngr.IsPause;
+			} );
+			if( isPause )
+				return;
+
 			Entities.ForEach( ( Entity entity, ref BoxInfo box, ref Translation trans, ref Sprite2DRendererOptions opt ) => {
 				if( !box.Initialized ) {
 					box.Initialized = true;
@@ -48,7 +56,7 @@ namespace BallHold
 				case StInit:
 					box.Timer += dt;
 					if( box.Timer > 1f ) {
-						box.WaitTime = 10f;
+						box.WaitTime = 7f;
 						box.Status = StWarp;
 #if false
 						box.Status = StMove;
@@ -89,7 +97,7 @@ namespace BallHold
 						box.Timer = 0;
 						box.Dist = 0;
 						nextWarpPoint( ref box, ref trans );
-						box.WaitTime = _random.NextFloat( 5f, 10f );
+						box.WaitTime = _random.NextFloat( 4f, 7f );
 					}
 					break;
 				}

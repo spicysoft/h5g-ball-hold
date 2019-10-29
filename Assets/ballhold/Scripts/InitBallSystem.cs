@@ -35,13 +35,18 @@ namespace BallHold
 				scl.Value.x = 1f;
 				ball.UseOldPos = false;
 
-				float randx = _random.NextFloat( -240f, 240f );
+				float randx = _random.NextFloat( -245f, 245f );
 				trans.Value.x = randx;
 
+				float randy = (float)_random.NextInt( -261, -220 );
+				trans.Value.y = randy;
+
+#if false
 				if( _random.NextBool() )
 					trans.Value.y = -260f;
 				else
 					trans.Value.y = -220f;
+#endif
 			} );
 
 		}

@@ -12,7 +12,7 @@ namespace BallHold
 	public class BallSystem : ComponentSystem
 	{
 		public const float BallRadius = 22;
-		private const float Gacc = 1000f;
+		private const float Gacc = 1500f;
 		//private const float Gacc = 0f;
 		private const float WallX = 270f - BallRadius;
 		private const float TopY = 480f - 100 - BallRadius;
@@ -56,7 +56,7 @@ namespace BallHold
 			// 半径2個分足したサイズ.
 			float2 boxSizeR = new float2( boxSize.x + BallRadius * 2f, boxSize.y + BallRadius * 2f );
 
-			float DebSpeed = 0;
+			//float DebSpeed = 0;
 
 			// 箱の内側の情報.
 			float boxInsideLeft = boxPos.x - boxSize.x * 0.5f + BallRadius;
@@ -116,7 +116,7 @@ namespace BallHold
 
 							spd = math.clamp( spd, 750f, 1500f );
 
-							DebSpeed = spd;
+							//DebSpeed = spd;
 
 							ball.MoveSpd = spd;
 							ball.MoveVec = dv / len;
@@ -276,6 +276,8 @@ namespace BallHold
 				gen.BallNum = ballCnt;
 			} );
 
+
+#if false
 			//if( DebSpeed > 0 ) {
 				Entities.WithAll<DebTextTab>().ForEach( ( Entity entity ) => {
 #if false
@@ -290,6 +292,7 @@ namespace BallHold
 					EntityManager.SetBufferFromString<TextString>( entity, str );
 				} );
 			//}
+#endif
 		}
 
 
