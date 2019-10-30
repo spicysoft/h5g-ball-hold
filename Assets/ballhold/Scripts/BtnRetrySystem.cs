@@ -13,7 +13,6 @@ namespace BallHold
 			bool btnOn = false;
 			Entities.WithAll<BtnRetryTag>().ForEach( ( Entity entity, ref PointerInteraction pointerInteraction ) => {
 				if( pointerInteraction.clicked ) {
-					Debug.LogAlways("btn ret click");
 					btnOn = true;
 				}
 			} );

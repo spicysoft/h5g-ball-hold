@@ -15,7 +15,6 @@ namespace BallHold
 			Entities.WithAll<BtnStartTag>().ForEach( ( Entity entity, ref PointerInteraction pointerInteraction ) => {
 				//Debug.LogAlways( "start btn" );
 				if( pointerInteraction.clicked ) {
-					Debug.LogAlways( "btn click" );
 					btnOn = true;
 				}
 			} );

@@ -15,7 +15,7 @@ namespace BallHold
 		private const float Gacc = 1500f;
 		//private const float Gacc = 0f;
 		private const float WallX = 270f - BallRadius;
-		private const float TopY = 480f - 100 - BallRadius;
+		private const float TopY = 490f - 100 - BallRadius;
 		//private const float TopY = 280f - BallRadius;
 		private const float BoundRate = 0.4f;
 

@@ -37,7 +37,7 @@ namespace BallHold
 				float randx = _random.NextFloat( -245f, 245f );
 				trans.Value.x = randx;
 
-				float randy = (float)_random.NextInt( -261, -220 );
+				float randy = (float)_random.NextInt( -257, -212 );
 				trans.Value.y = randy;
 			} );
 

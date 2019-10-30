@@ -31,7 +31,7 @@ namespace BallHold
 					box.RandomInitialized = true;
 					int seed = World.TinyEnvironment().frameNum;
 					_random.InitState( (uint)seed );
-					Debug.LogFormatAlways( "seed {0}", seed );
+					//Debug.LogFormatAlways( "seed {0}", seed );
 				}
 				if( !box.Initialized ) {
 					box.Initialized = true;
@@ -110,7 +110,7 @@ namespace BallHold
 		{
 			nextTarget( ref box, ref trans );
 			trans.Value += box.TarDir * box.TarDist;
-			Debug.LogFormatAlways( "pos {0}", trans.Value );
+			//Debug.LogFormatAlways( "pos {0}", trans.Value );
 		}
 
 		void nextTarget( ref BoxInfo box, ref Translation trans )

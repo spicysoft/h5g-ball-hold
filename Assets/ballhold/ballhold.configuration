@@ -39,10 +39,6 @@
             "$type": "Unity.Tiny.Scenes.Scenes, Unity.Tiny.Scenes",
             "Elements": [{
                 "SceneReference": {
-                    "SceneGuid": "bc9362d1b1784964ac181b46e56ee60d"
-                }
-            }, {
-                "SceneReference": {
                     "SceneGuid": "de12eb1ae38241f089ee556177bcdf66"
                 }
             }, {
@@ -60,6 +56,10 @@
             }, {
                 "SceneReference": {
                     "SceneGuid": "8bd377890c1a491a88af230cc7a359b4"
+                }
+            }, {
+                "SceneReference": {
+                    "SceneGuid": "bc9362d1b1784964ac181b46e56ee60d"
                 }
             }]
         }, {

@@ -38,7 +38,7 @@
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
                 "x": 45,
-                "y": -260
+                "y": -256
             }
         }, {
             "$type": "Unity.Tiny.Core2D.Rotation, Unity.Tiny.Core2D",
@@ -60,8 +60,8 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Sprite2DRendererOptions, Unity.Tiny.Sprite2D",
             "size": {
-                "x": 40,
-                "y": 40
+                "x": 44,
+                "y": 44
             },
             "drawMode": 2
         }, {
@@ -281,7 +281,11 @@
                 "StableTypeHash": 11301794271907081408
             }, {
                 "StableTypeHash": 147127668789581756
+            }, {
+                "StableTypeHash": 8144720687316769559
             }]
+        }, {
+            "$type": "Unity.Entities.Disabled, Unity.Entities"
         }]
     }, {
         "Components": [{
@@ -313,11 +317,11 @@
             "$type": "Unity.Tiny.UILayout.RectTransform, Unity.Tiny.UILayout",
             "anchorMin": {
                 "x": 0.5,
-                "y": 0.5
+                "y": 1
             },
             "anchorMax": {
                 "x": 0.5,
-                "y": 0.5
+                "y": 1
             },
             "sizeDelta": {
                 "x": 100,
@@ -325,7 +329,7 @@
             },
             "anchoredPosition": {
                 "x": 73,
-                "y": 422
+                "y": -58
             },
             "pivot": {
                 "x": 0.5,
@@ -450,11 +454,11 @@
             "$type": "Unity.Tiny.UILayout.RectTransform, Unity.Tiny.UILayout",
             "anchorMin": {
                 "x": 0.5,
-                "y": 0.5
+                "y": 1
             },
             "anchorMax": {
                 "x": 0.5,
-                "y": 0.5
+                "y": 1
             },
             "sizeDelta": {
                 "x": 100,
@@ -462,7 +466,7 @@
             },
             "anchoredPosition": {
                 "x": -156,
-                "y": 422
+                "y": -58
             },
             "pivot": {
                 "x": 0.5,
@@ -576,7 +580,7 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Translation, Unity.Tiny.Core2D",
             "Value": {
-                "y": -380
+                "y": -435
             }
         }, {
             "$type": "Unity.Tiny.Core2D.Rotation, Unity.Tiny.Core2D",
@@ -598,7 +602,7 @@
             "$type": "Unity.Tiny.Core2D.Sprite2DRendererOptions, Unity.Tiny.Sprite2D",
             "size": {
                 "x": 840,
-                "y": 200
+                "y": 310
             },
             "drawMode": 2
         }, {
@@ -657,13 +661,10 @@
             "Index": 8
         }, {
             "$type": "Unity.Tiny.UILayout.RectTransform, Unity.Tiny.UILayout",
-            "anchorMin": {
-                "x": 0.5,
-                "y": 0.5
-            },
+            "anchorMin": {},
             "anchorMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 1,
+                "y": 1
             },
             "sizeDelta": {},
             "anchoredPosition": {},
@@ -901,7 +902,7 @@
             "$type": "Unity.Tiny.Core2D.Sprite2DRendererOptions, Unity.Tiny.Sprite2D",
             "size": {
                 "x": 540,
-                "y": 960
+                "y": 780
             },
             "drawMode": 2
         }, {
@@ -1188,6 +1189,8 @@
                 "StableTypeHash": 18323672362971129080
             }, {
                 "StableTypeHash": 11915719400937508493
+            }, {
+                "StableTypeHash": 1663153097635942722
             }]
         }]
     }, {
@@ -1376,6 +1379,8 @@
         }, {
             "$type": "Unity.Authoring.Core.SiblingIndex, Unity.Authoring.Core"
         }, {
+            "$type": "BallHold.CameraInfo, ballhold"
+        }, {
             "$type": "Unity.Entities.EntityGuid, Unity.Entities",
             "a": 18425416927773476291,
             "b": 12277864419541674404
@@ -1444,6 +1449,8 @@
                 "StableTypeHash": 17378348762221180850
             }, {
                 "StableTypeHash": 874803706151837934
+            }, {
+                "StableTypeHash": 16436320581890395777
             }]
         }]
     }]
