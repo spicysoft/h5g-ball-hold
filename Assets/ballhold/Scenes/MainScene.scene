@@ -666,7 +666,9 @@
                 "x": 1,
                 "y": 1
             },
-            "sizeDelta": {},
+            "sizeDelta": {
+                "y": 96
+            },
             "anchoredPosition": {},
             "pivot": {}
         }, {
@@ -727,7 +729,11 @@
                 "StableTypeHash": 17378348762221180850
             }, {
                 "StableTypeHash": 874803706151837934
+            }, {
+                "StableTypeHash": 15801957270674875737
             }]
+        }, {
+            "$type": "BallHold.CanvasTag, ballhold"
         }]
     }, {
         "Components": [{
@@ -1387,10 +1393,7 @@
         }, {
             "$type": "Unity.Tiny.Core2D.Camera2D, Unity.Tiny.Core2D",
             "halfVerticalSize": 480,
-            "rect": {
-                "width": 540,
-                "height": 960
-            },
+            "rect": {},
             "backgroundColor": {
                 "r": 0.0520648,
                 "g": 0.1272052,

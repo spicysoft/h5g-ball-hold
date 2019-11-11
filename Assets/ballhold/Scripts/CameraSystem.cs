@@ -20,11 +20,11 @@ namespace BallHold
 					float frameAsp = frameH / frameW;
 
 					// カメラ情報.
-					float rectW = camera.rect.width;
-					float rectH = camera.rect.height;
+					float rectW = 540f;
+					float rectH = 960f;
 					float rectAsp = rectH / rectW;
 
-					camera.halfVerticalSize = (0.5f * rectH) * frameAsp / rectAsp;
+					camera.halfVerticalSize *= frameAsp / rectAsp;
 
 					//Debug.LogFormat( "----	halfvert {0}", camera.halfVerticalSize );
 
